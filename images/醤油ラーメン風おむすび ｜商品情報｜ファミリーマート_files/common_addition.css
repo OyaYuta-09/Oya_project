@@ -1,0 +1,642 @@
+@charset "UTF-8";
+
+
+/**
+ * 沖縄追加分CSS定義ファイル
+ * 沖縄開発分終了時にcommonCSS等にマージ予定
+ */
+
+
+/**
+ * 【共通定義】
+ */
+.bottom0{margin-bottom:0 !important;}
+
+.bottom3{margin-bottom:3px !important;}
+
+.bottom5{margin-bottom:5px !important;}
+
+.bottom7{margin-bottom:7px !important;}
+
+.bottom10{margin-bottom:10px !important;}
+
+.bottom12{margin-bottom:12px !important;}
+
+.bottom15{margin-bottom:15px !important;}
+
+.bottom20{margin-bottom:20px !important;}
+
+.bottom30{margin-bottom:30px !important;}
+
+.ly-ml10 {
+	margin-left: 10px !important;
+}
+
+.ly-ml15 {
+	margin-left: 15px !important;
+}
+
+.ly-ml20 {
+	margin-left: 20px !important;
+}
+
+.ly-pt20 {
+	padding-top: 20px;
+}
+
+.img_size_90 p img {
+    width: 90%;
+}
+
+.img_size_85 p img {
+    width: 85%;
+}
+
+.img_size_80 p img {
+    width: 80%;
+}
+
+.img_size_50 p img {
+    width: 50%;
+}
+
+.img_size_35 p img {
+    width: 35%;
+}
+
+.img_align_center p {
+    text-align: center;
+}
+
+.width90 {
+    width: 90%;
+}
+
+.width920px {
+    width: 920px;
+}
+
+.width880px {
+    width: 880px;
+}
+
+.centering {
+    margin:0 auto;
+}
+
+.padding_left30 {
+    padding-left: 30px;
+}
+
+.font_size50 {
+    vertical-align:top;
+    font-size:50%;
+}
+
+.font_size140 {
+    font-size:140%;
+}
+
+/**
+ * 【商品情報用定義】
+ */
+
+/**
+ * 【予約弁当用定義】
+ */
+.cloz	{ clear:both; }
+.mZstage	{ position: relative; margin:0; padding:32px 0 0; max-width:100% }
+.mZstage .shareButtonBlock	{ position:absolute; right:0; top:0; padding:0; background:#ffffff; line-height:0; _padding-bottom:0; }
+
+.btn_yoyakubento	{ text-align: center; position: relative; width: 920px; height: 80px; display: block; }
+.btn_yoyakubento a	{ background: url(/content/dam/family/goods/yoyakubento/btn.gif) no-repeat; position: absolute; top: 0; left: 30px; width: 860px; height: 80px; display: block; }
+.btn_yoyakubento a:hover	{ background-position: 0 -80px; }
+.btn_yoyakubento a span	{ display:none; }
+
+/**
+ * 【キャンペーン用定義】
+ */
+@media print, screen and (min-width: 737px) {
+	.ly-tora-ttl p img {
+		width: 35%;
+	}
+}
+
+@media only screen and (max-width: 736px) {
+	.ly-tora-ttl p img {
+		width: 50%;
+	}
+}
+
+.clear:after{content:".";display: block;height: 0;visibility:hidden;clear: both;}
+
+.collaboRecipeArea{
+	background:url(/content/dam/family/campaign/recipe_bg.gif) repeat-y top left;
+	margin:0 0px 0 0px;
+	padding:0 49px 30px 49px;
+	border:1px solid #efefe8;
+}
+
+.collaboRecipeArea h3.menu{padding:27px 0;text-align:center;margin:0;}
+
+.collaboRecipeArea ul.collaboRecipe{margin-bottom:20px;}
+.collaboRecipeArea ul.collaboRecipe li{float:left;margin-left:20px;margin-bottom:10px;}
+.collaboRecipeArea ul.collaboRecipe li.first{margin-left:0px;}
+
+.collaboRecipeArea .recipeArea{background:#FFF;padding:30px; margin-bottom:30px;}
+
+	.collaboRecipeArea .recipeArea h4{margin-bottom:25px;}
+	.collaboRecipeArea .recipeArea .LeftBlock{float:left;width:380px;}
+	.collaboRecipeArea .recipeArea .LeftBlock table{background:#ecf8f8;line-height:140%;border-top:1px solid #ddddd9;margin-bottom:20px;color:#4c4a4a;}
+	.collaboRecipeArea .recipeArea .LeftBlock table tr td{padding:2px 8px;border-bottom:1px solid #ddddd9;}
+	.collaboRecipeArea .recipeArea .LeftBlock table span{color:#00817d;font-weight:bold;}
+	.collaboRecipeArea .recipeArea .LeftBlock table small{font-size:80%;}
+	.collaboRecipeArea .recipeArea .LeftBlock dl{width:380px;line-height:160%;margin-bottom:20px;}
+	.collaboRecipeArea .recipeArea .LeftBlock dl dt{color:#02a6a1;float:left;clear:left;width:45px;}
+	.collaboRecipeArea .recipeArea .LeftBlock dl dd{float:left;width:335px}
+
+
+	.collaboRecipeArea .recipeArea .RightBlock{float:right;width:360px;}
+		.collaboRecipeArea .recipeArea .RightBlock .itembox{border:2px solid #b3e4e3;margin-top:10px;}
+		.collaboRecipeArea .recipeArea .RightBlock .itembox	.itemPhoto{width:106px;float:left;}
+		.collaboRecipeArea .recipeArea .RightBlock .itembox	.itemTxt{width:250px;float:left;margin-top:15px;}
+			.collaboRecipeArea .recipeArea .RightBlock .itembox	.itemTxt p a{color:#00817d;font-weight:bold;}
+
+
+			.collaboRecipeArea .recipeArea.color02 table{background:#fef3eb;}
+			.collaboRecipeArea .recipeArea.color02 table span{color:#dd5c07;font-weight:bold;}
+			.collaboRecipeArea .recipeArea.color02 dl dt{color:#dd5c07;}
+			.collaboRecipeArea .recipeArea.color02 .itembox{border:2px solid #fbd7be;}
+			.collaboRecipeArea .recipeArea.color02 .itembox	.itemTxt p a{color:#dd5c07;}
+
+			.collaboRecipeArea .recipeArea.color03 table{background:#fff1f5;}
+			.collaboRecipeArea .recipeArea.color03 table span{color:#e52a63;font-weight:bold;}
+			.collaboRecipeArea .recipeArea.color03 dl dt{color:#e52a63;}
+			.collaboRecipeArea .recipeArea.color03 .itembox{border:2px solid #fcc9d8;}
+			.collaboRecipeArea .recipeArea.color03 .itembox	.itemTxt p a{color:#e52a63;}
+
+
+						.collaboRecipeArea .recipeArea.color04 table{background:#fffae5;}
+			.collaboRecipeArea .recipeArea.color04 table span{color:#9c7e01;font-weight:bold;}
+			.collaboRecipeArea .recipeArea.color04 dl dt{color:#9d7e01;}
+			.collaboRecipeArea .recipeArea.color04 .itembox{border:2px solid #ebe5ca;}
+			.collaboRecipeArea .recipeArea.color04 .itembox	.itemTxt p a{color:#9c7e01;}
+
+
+						.collaboRecipeArea .recipeArea.color05 table{background:#eefbe9;}
+			.collaboRecipeArea .recipeArea.color05 table span{color:#2a7c0b;font-weight:bold;}
+			.collaboRecipeArea .recipeArea.color05 dl dt{color:#2a7c0b;}
+			.collaboRecipeArea .recipeArea.color05 .itembox{border:2px solid #dbe5d7;}
+			.collaboRecipeArea .recipeArea.color05 .itembox	.itemTxt p a{color:#2a7c0b;}
+
+
+						.collaboRecipeArea .recipeArea.color06 table{background:#fff1e5;}
+			.collaboRecipeArea .recipeArea.color06 table span{color:#e8730f;font-weight:bold;}
+			.collaboRecipeArea .recipeArea.color06 dl dt{color:#e8730f;}
+			.collaboRecipeArea .recipeArea.color06 .itembox{border:2px solid #fbd7be;}
+			.collaboRecipeArea .recipeArea.color06 .itembox	.itemTxt p a{color:#e8730f;}
+
+
+									.collaboRecipeArea .recipeArea.color07 table{background:#fffcee;}
+			.collaboRecipeArea .recipeArea.color07 table span{color:#968b6e;font-weight:bold;}
+			.collaboRecipeArea .recipeArea.color07 dl dt{color:#968b6e;}
+			.collaboRecipeArea .recipeArea.color07 .itembox{border:2px solid #ebe5ca;}
+			.collaboRecipeArea .recipeArea.color07 .itembox	.itemTxt p a{color:#9c7e01;}
+
+.famiradiContent{
+	background:url(/content/dam/family/campaign/content_bg.gif) repeat-y left top;
+	padding:0 0 30px 0;
+	background-size: contain;
+}
+
+.guest{
+	background:url(/content/dam/family/campaign/main_bg.png) no-repeat left top;
+	padding:20px 20px 34px 56px;
+	margin:0 0 16px 0;
+}
+
+.YoshimotoChiiki {
+	background: #ffde00;
+	padding:0 20px 20px;
+	margin:0 0 60px;
+	font-family:"メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", sans-serif;
+}
+
+.YoshimotoChiiki .reportBlock{
+	background:#FFF;
+	border-radius:6px;
+	margin:20px 0 0;
+	padding:20px;
+	font-size:125%;
+	color:#000;
+}
+
+.YoshimotoChiiki .reportBlock .bgblock{
+	background:#def2d8;
+	padding:15px 15px 10px;
+	margin:0 0 15px 0;
+}
+
+.YoshimotoChiiki .reportBlock .text{
+	line-height:1.7;
+	margin:0 0 15px 0;
+}
+
+/**
+ * 【サービス用定義】
+ */
+
+/**
+ * 【キッザニア用定義】
+ */
+/*********** キッザニアリンク ***********/
+.kidzania th, .kidzania td {
+	text-align:center !important;
+}
+
+.kidzaniaNav{
+	margin:0 0 10px 0;
+}
+
+.kidzaniaNav a{
+	float:left;
+	margin:10px 10px 0 0;
+}
+/**
+ * 【チケット用定義】
+ */
+.ly-mod-tbl-inner-sports {
+	width: auto;
+	overflow-x: auto;
+	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+}
+
+.ticket_BgSet .notes{
+	padding:0 20px 10px 0;
+	text-align:right;
+	font-size:12px;
+}
+.ticket_BgSet dl.teamList{
+	margin:0 auto 10px auto;
+	border-left:1px solid #8eb76e;
+	border-top:1px solid #8eb76e;
+	width:640px;
+}
+.ticket_BgSet dl.teamList dt{
+		float:left;
+		border-right:1px solid #8eb76e;
+		border-bottom:1px solid #8eb76e;
+}
+.ticket_BgSet dl.teamList dd{
+		float:left;
+		border-right:1px solid #8eb76e;
+		border-bottom:1px solid #8eb76e;
+}
+.ticket_BgSet .clear:after{
+	content:".";
+	display: block;
+	height: 0;
+	visibility:hidden;
+	clear: both;
+}
+div.ticket_tdrMain{
+	background:url(/content/dam/family/common/bg/ticket_bg_08.gif) left top no-repeat;
+	margin:0 0 10px 0;
+    background-size: 100%;
+}
+
+div.ticket_tdrMain div.ticket_tdrMainInner{
+	padding:17px 0 7px 0;
+	background:url(/content/dam/family/common/bg/ticket_bg_09.gif) left bottom no-repeat;
+    background-size: 100%;
+}
+
+@media only screen and (max-width: 736px) {
+	div.ticket_tdrMain{
+		background-size:100% auto;
+	}
+	div.ticket_tdrMain div.ticket_tdrMainInner{
+		background-size:100% auto;
+	}
+}
+
+div.ticket_tdrMain h3{
+	padding:0 25px 0 25px;
+	margin:0 0 8px 0;
+}
+div.ticket_tdrMain .ticket_tdrMain_txt{
+	padding:0 25px 6px 25px;
+}
+div.ticket_tdrMain .ticket_tdrMain_img{
+	padding:0 10px 6px 10px;
+}
+.tabuhoContent{
+	background:url(/content/dam/family/services/tabuho_bg.gif) repeat left 30px;
+	text-align:center;
+	padding:0 0 20px 0;
+	margin:0 0 20px 0;
+}
+.tabuhoContent .linkarea,
+.tabuhoContent .listarea{
+	background:#FFF;
+	text-align:left;
+	margin:0 auto;}
+
+.tabuhoContent .linkarea{padding:5px 15px 5px 15px;}
+.tabuhoContent .linkarea ul.linklist{}
+.tabuhoContent .linkarea ul.linklist li{
+	background:url(/content/dam/family/services/tabuho_linkicon.gif) no-repeat left center;
+	margin:10px 0;}
+.tabuhoContent .linkarea ul.linklist li a{padding-left:14px;}
+
+.tabuhoContent .listarea{padding:15px;}
+.tabuhoContent .listarea p.state{color:#000;font-weight:bold;margin:0;padding:0!important;}
+.tabuhoContent .listarea ul.tenpo{margin:0 0 10px 0;padding:0;}
+.tabuhoContent .listarea ul.tenpo li{
+	color:#0187b8;
+	border-right:1px solid #757575;
+	display:inline;
+	padding:0 6px 0 5px;
+	line-height:1.7;
+	}
+.tabuhoContent .listarea ul.tenpo li:first-child{padding-left:0;}
+.tabuhoContent .listarea ul.tenpo li:last-child{border-right:none;}
+
+/**
+ * 【カードポイント用定義】
+ */
+.ly-mod-def-tbl thead tr td.tbl-heading-pointChart {
+    font-family: sans-serif;
+    background-color: #d5efc1;
+    border-bottom: 1px solid #c9d5de;
+    color: #333;
+    font-size: 1.07692rem;
+    text-align: center;
+    font-weight: bold;
+}
+.ly-card-list .ly-mod-def-tbl tbody tr td.level2 {
+    font-family: sans-serif;
+    background-color: #fafad2;
+    color: #333;
+    font-size: 1.07692rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ly-card-list .ly-mod-def-tbl tbody tr td.level3 {
+    font-family: sans-serif;
+	background-color:#f4fbef;
+	font-size: 1.07692rem;
+	text-align: left;
+}
+
+.ly-card-list .ly-mod-def-tbl tbody tr td.level4 {
+    font-family: sans-serif;
+	font-size: 110%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.pageLink03 ul li {
+    padding-bottom: 3px;
+    padding-left: 23px;
+    background: url(/content/dam/family/card_point/ftmail/icn_pdf.gif) no-repeat left top;
+}
+
+.list ul li {
+    margin-left: 17px;
+    list-style: disc;
+    list-style-image: url(/content/dam/family/card_point/t_point/famirank/cont_parts_li01.gif);
+}
+
+.QAList li {
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    padding-left: 30px;
+    background: url(/content/dam/family/card_point/t_point/famirank/cont_parts_question.gif) no-repeat left 0.2em;
+}
+
+.ptcpMainBtnArea {
+	margin:0;
+	padding:8px 0 21px 0;
+	background:url(/content/dam/family/card_point/ptcp/img.jpg) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.ptcpSub{
+	margin:0 0 30px 0;
+	padding:0 10px 10px 10px;
+	background:#5bc528;
+}
+.ptcpSub .Inner{
+	background:#FFF;
+	padding:20px;
+	margin:0;
+}
+
+.ptcpImageBg {
+    position: relative;
+    width: 100%;
+}
+.ptcpImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(97%); /* アスペクト比を固定 */
+}
+
+.ptcpButton {
+    margin: 0 auto;
+    width: 61.3%;
+}
+
+.cardPointPaperPrivacyNote {
+	border: 1px solid #ccc;
+	padding: 5px;
+	text-indent: -15px;
+	padding-left: 20px;
+}
+
+.cardPointPaperPrivacy ol.list{
+	padding-left:2px;
+}
+
+.cardPointPaperPrivacy ol.list li{
+	margin-bottom:5px;
+	margin-left:17px;
+	list-style:decimal;
+}
+
+.cardPointPaperPrivacy ol.list ul.subList li{
+	list-style-type:none!important;
+}
+
+.cardPointPaperPrivacy ol.list li{
+	margin-bottom:15px;
+}
+
+.cardPointPaperPrivacy ol.list ul.subList{
+	margin-top:10px;
+}
+
+.cardPointPaperPrivacy ol.list ul.subList li{
+	list-style-type:none!important;
+}
+
+.bdrGray1{border-bottom:#d5dee5 2px solid;}
+.bdrGray2{border-left:#d5dee5 2px solid;}
+
+.howtoBlock{
+	margin:0 10px 20px 10px;
+	border-top:4px solid #004097;
+	}
+
+.howtoBlock p{
+	margin:0 0 10px 0!important;
+	color:#004097!important;
+	font-size:120%;
+	font-weight:bold;
+	line-height:150%;
+	}
+
+.howtoBlock p span.small{line-height:150%;font-weight:normal;color:#004097;padding-top:10px !important;}
+.howtoBlock p span.large{line-height:100%;font-size:150%;color:#ff0101;}
+
+
+.howtoBlock p.image{
+	float:left;
+	width:215px;
+	margin-bottom:0;}
+
+.howtoBlock .txt{
+	float:left;
+	width:100%;
+	margin-bottom:0;
+	padding:0;
+	}
+
+.howtoBlock h3{
+	margin:20px 0 10px 0;
+	padding:0 0 5px 0;
+	border-bottom:2px dotted #004097;}
+
+.howtoBlock .bdrdot{
+	padding-bottom:10px !important;
+	border-bottom:2px dotted #004097;
+}
+
+.exchangeMainBtnArea {
+	margin:-15% 0 0 0;
+	padding:2% 0 6% 0;
+	background:url(/content/dam/family/card_point/t_point_use/exchange/10point.jpg) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.exchangeImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(77%); /* アスペクト比を固定 */
+}
+
+.exchangeButton {
+    margin:0 auto;
+    width: 61.3%;
+}
+
+.exchangeCardBtnArea {
+	margin:-13% 0 0 0;
+	padding:2% 0 6% 0;
+	background:url(/content/dam/family/card_point/t_point_use/exchange/card.jpg) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.exchangeCardImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(27%); /* アスペクト比を固定 */
+}
+
+.exchangeCardButton {
+    margin:0% 0% -2% 37%;
+    width: 35.0%;
+}
+
+.exchangeMoreBtnArea {
+	margin:-15% 0 0 0;
+	padding:2% 0 6% 0;
+	background:url(/content/dam/family/card_point/t_point_use/exchange/more.gif) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.exchangeMoreImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(33%); /* アスペクト比を固定 */
+}
+
+.exchangeMoreButton {
+    margin:0% 0% -2% 19%;
+    width: 60.0%;
+}
+
+.tdrMainBtnArea {
+	margin:-6% 0 0 0;
+	padding:2% 0 6% 0;
+	background:url(/content/dam/family/services/ticket/tdr/hc0g7400000lmq8h/tdr_main.jpg) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.tdrImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(24%); /* アスペクト比を固定 */
+}
+
+.tdrButton {
+    margin:0% 0% -5.8% 5%;
+    width: 39.0%;
+}
+
+.appleMcMainBtnArea {
+	margin:5% 0 0 0%;
+	padding:2% 0 6% 0;
+	background:url(/content/dam/family/services/posa/img/apple_mc/apple_mc_bg.png) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.appleMcImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(70%); /* アスペクト比を固定 */
+}
+
+.appleMcButton {
+    margin:0% 0% -1% 43%;
+    width: 10.0%;
+}
+
+.ft161108MainBtnArea {
+	margin:5% 0 0 0%;
+	padding:2% 0 6% 0;
+	background:url(/content/dam/family/card_point/campaign/ft161108/main2.png) no-repeat left bottom;
+	text-align:center;
+    background-size:contain;
+}
+
+.ft161108ImageBg:before {
+    content:"";
+    display: block;
+    padding-top: calc(95%); /* アスペクト比を固定 */
+}
+
+.ft161108Button {
+    margin:0% 0% 0.3% 4.5%;
+    width: 90.0%;
+}

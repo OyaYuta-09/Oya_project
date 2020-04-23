@@ -1,0 +1,658 @@
+// 名前空間定義
+/** @namespace */
+family = window.family || {};
+/** @namespace */
+family.narrowDown = family.narrowDown || {};
+
+// タイプ定義
+
+/**
+ * 検索条件の情報を保持する.
+ * キーが条件項目名、値が選択されている選択肢.
+ * @typedef {Object.<string, string[]>} family.narrowDown.Criteria
+ */
+
+/**
+ * URLの各部分の情報を保持する.
+ * @typedef {Object} family.narrowDown.UrlInfo
+ * @property {string} path URLのパス部分
+ * @property {string} hash ハッシュ
+ * @property {string} parameter パラメータ部分
+ */
+
+/**
+ * フィルタのパラメータを保持する.
+ * @typedef {Object} family.narrowDown.FilterInfo
+ * @property {family.narrowDown.Criteria} criteria 検索条件情報
+ * @property {jQuery} root ルート要素。該当なしの場合はこの要素の内部がすべて削除される。
+ * @property {jQuery} results 結果の要素。
+ */
+
+// 処理定義
+/**
+ * 絞込みコンポーネント.
+ * @param {JQuery} $ jQuery
+ */
+(function($) {
+
+    /** 初期化済みの場合は true、それ以外は false. */
+    var initialized = false;
+
+    /**
+     * 登録されているレンダラのリスト.
+     * @type {family.narrowDown.Renderer[]}
+     */
+    var renderers = [];
+
+    /**
+     * 検索条件の情報.
+     * @type {family.narrowDown.Criteria}
+     */
+    var criteria = {};
+
+    /**
+     * 絞込みモジュールのセレクタ.
+     * @const
+     */
+    var NARROW_DOWN_SELECTOR = "div.js-narrowDownModule";
+
+    /**
+     * カテゴリボタン部分のセレクタ.
+     * @const
+     */
+    var NARROW_DOWN_CATEGORY_BUTTONS_SELECTOR = ".js-narrowDownCampaignButtons";
+
+    /**
+     * 絞込み条件部分を取得するセレクタ.
+     * @const
+     */
+    var NARROW_DOWN_CRITERIA_SELECTOR = "div.js-narrowDownCriteria";
+
+    /**
+     * カテゴリボタンのリンクの正規表現. group 1 がカテゴリコード.
+     * @const
+     */
+    var CATEGORY_HASH_PATTERN = /#js-filter-campaignCategory-(\w*)/;
+
+    var CAMPAIGN_CATEGORY_CRITERIA_NAME = 'C]campaignCategory';
+
+    /**
+     * 結果を表示を行うオブジェクトを登録する.
+     * @param {family.narrowDown.Renderer} renderer 結果レンダラ
+     */
+    family.narrowDown.registerResultRenderer = function(renderer) {
+        renderers.push(renderer);
+        if (initialized) {
+            renderer.render(criteria);
+        }
+    };
+
+    /**
+     * URLを解析して各部分を抜き出す.
+     * @param {string} url URL
+     * @returns {family.narrowDown.UrlInfo} URLの各部分を保持するオブジェクト
+     */
+    function parseUrl(url) {
+        var matched = url.match(/^(.*?)((?:\?.*?)?)((?:#.*?)?)$/);
+        return {
+            path: matched[1],
+            parameter: matched[2].replace(/^\?/, ""),
+            hash: matched[3].replace(/^#/, "")
+        };
+    }
+
+    /**
+     * URLパラメータを取得する.
+     * @param {string} urlParameterPart URLのパラメータ部分の文字列
+     * @returns {Object.<string, string[]|string>} パラメータ情報. キーはパラメータ名.
+     */
+    function parseUrlParameter(urlParameterPart) {
+        var paramPattern = /(.*?)=(.*?)(\&|$)/g;
+
+        var parameters = {};
+        var matched;
+        while ((matched = paramPattern.exec(urlParameterPart)) != null) {
+            var name = decodeURIComponent(matched[1]);
+            var value = decodeURIComponent(matched[2]);
+            if (parameters[name] != null) {
+                parameters[name] = [parameters[name], value];
+            } else {
+                parameters[name] = value;
+            }
+        }
+        return parameters;
+    }
+
+    /**
+     * 初期化を行う.
+     */
+    function initialize() {
+        if ($(NARROW_DOWN_SELECTOR).length == 0) {
+            return;
+        }
+        var urlParts = parseUrl(window.location.href);
+        var parameters = parseUrlParameter(urlParts.parameter);
+
+        criteria = {}
+        if (parameters.q) {
+            try {
+                criteria = JSON.parse(parameters.q);
+            } catch(e) {
+            }
+        }
+        applyCriteriaToForm(criteria);
+
+        $(NARROW_DOWN_SELECTOR).find('.ly-btn-search > a').on('click', submit);
+        $(NARROW_DOWN_CATEGORY_BUTTONS_SELECTOR).find('a').on('click', campaignCategoryClicked);
+        initialized = true;
+
+        $.each(renderers, function(i, elt) {
+            elt.rendar(criteria);
+        });
+    }
+
+    /**
+     * 検索ボタン押下したときの処理を行う.
+     */
+    function submit() {
+        var urlParts = parseUrl(window.location.href);
+        var params = parseUrlParameter(urlParts.parameter);
+        params.q = JSON.stringify(createCriteriaByForm());
+        window.location.href = urlParts.path + "?" + $.param(params);
+    }
+
+    /**
+     * キャンペーンカテゴリボタンをクリックしたときの処理を行う.
+     * @param {Event} event イベント情報
+     */
+    function campaignCategoryClicked(event) {
+        var target = $(event.currentTarget);
+        var category = CATEGORY_HASH_PATTERN.exec(target.attr('href'))[1];
+        selectCampaignButton(category);
+
+        var urlParts = parseUrl(window.location.href);
+        var params = parseUrlParameter(urlParts.parameter);
+        params.q = JSON.stringify(createCriteriaByCategoryButtons());
+        window.location.href = urlParts.path + "?" + $.param(params);
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    /**
+     * 現在の画面の入力状態に対応する検索条件情報を作成する.
+     * @returns {family.narrowDown.Criteria} 検索条件情報.
+     */
+    function createCriteriaByForm() {
+        var formCriteria = {}
+        $(NARROW_DOWN_CRITERIA_SELECTOR).find('dl').each(function() {
+            var criteriaTop = $(this);
+            var cssMatched = criteriaTop.prop('class').match(/\bnarrowDown-(.*?)(\s|$)/);
+            var name = cssMatched[1];
+            var values = [];
+            criteriaTop.find(":checkbox:checked").each(function() {
+                values.push($(this).val());
+            });
+            if (values.length > 0) {
+                formCriteria[name] = values;
+            }
+        });
+        $.extend(formCriteria, createCriteriaByCategoryButtons());
+        return formCriteria;
+    }
+
+    /**
+     * カテゴリボタンの選択状態から検索条件を作成する.
+     * @returns {family.narrowDown.Criteria} 検索条件情報
+     */
+    function createCriteriaByCategoryButtons() {
+        var buttonCriteria = {}
+        var selectedTag = $(NARROW_DOWN_CATEGORY_BUTTONS_SELECTOR).find('li.ly-act');
+        if (selectedTag.length > 0) {
+            var category =  CATEGORY_HASH_PATTERN.exec(selectedTag.find('a').attr('href'))[1];
+            if (category != '') {
+                buttonCriteria[CAMPAIGN_CATEGORY_CRITERIA_NAME] = [category];
+            }
+        }
+        return buttonCriteria;
+    }
+
+    /**
+     * 検索条件を画面の入力欄に反映する.
+     * @param {family.narrowDown.Criteria} criteria 検索条件情報
+     */
+    function applyCriteriaToForm(criteria) {
+        $(NARROW_DOWN_CRITERIA_SELECTOR).find('dl').each(function() {
+            var criteriaTop = $(this);
+            var cssMatched = criteriaTop.prop('class').match(/\bnarrowDown-(.*?)(\s|$)/);
+            var name = cssMatched[1];
+            var values = criteria[name] || [];
+            criteriaTop.find(":checkbox").each(function() {
+                var checkBox = $(this);
+                var checked = values.indexOf(checkBox.val()) >= 0;
+                checkBox.prop("checked", checked);
+                if (checked) {
+                    checkBox.closest('label').addClass('ly-act');
+                } else {
+                    checkBox.closest('label').removeClass('ly-act');
+                }
+            });
+        });
+
+        if (criteria[CAMPAIGN_CATEGORY_CRITERIA_NAME] != null
+                && criteria[CAMPAIGN_CATEGORY_CRITERIA_NAME][0] != null) {
+            selectCampaignButton(criteria[CAMPAIGN_CATEGORY_CRITERIA_NAME][0]);
+        }
+    }
+
+    /**
+     * 指定したキャンペーンカテゴリコードに対応するキャンペーンカテゴリボタンを選択状態とする.
+     * @param {string} campaignCategory キャンペーンカテゴリコード
+     */
+    function selectCampaignButton(campaignCategory) {
+        var buttons = $(NARROW_DOWN_CATEGORY_BUTTONS_SELECTOR);
+        buttons.find('li').each(function() { $(this).removeClass('ly-act'); });
+        buttons.find('li a[href="#js-filter-campaignCategory-' + campaignCategory + '"]').closest('li').addClass('ly-act');
+    }
+
+    $(function() {
+        initialize();
+    });
+})(jQuery);
+
+(function() {
+    /**
+     * クラスの拡張を行う.
+     * @param {Function} targetClass 対象クラス
+     * @param {Function} superClass 継承元（親）クラス
+     * @param {Object} members 対象クラスに追加するメンバ
+     */
+    family.narrowDown.extendClass = function(targetClass, superClass, members) {
+        var newPrototype = new superClass();
+        $.extend(newPrototype, targetClass.prototype);
+        $.extend(newPrototype, members || {});
+        newPrototype._super = superClass.prototype;
+        targetClass.prototype = newPrototype;
+    };
+
+    /**
+     * 検索結果の描画を行うオブジェクトのインターフェイス.
+     * @class
+     */
+    family.narrowDown.Renderer = {
+        /**
+         * 結果の描画を行う.
+         * @param {family.narrowDown.Criteria} criteria 検索条件
+         */
+        render: function(criteria) {}
+    };
+
+    /**
+     * 検索結果の描画を行うオブジェクトの基本実装.
+     * HTMLは全表示されている前提で、そこから条件を満たさない情報を削除して表示を行う.
+     * @class
+     * @param {string} 結果表示領域の最上位ノードを示すセレクタ.
+     * @param {string} 結果リストのデータを示すセレクタ.
+     */
+    family.narrowDown.DefaultRenderer = function(rootSelector, listItemsSelector) {
+        this.rootSelector = rootSelector;
+        this.listItemsSelector = listItemsSelector;
+    };
+    $.extend(family.narrowDown.DefaultRenderer.prototype, { /** @lends family.narrowDown.DefaultRenderer.prototype */
+        /**
+         * 絞込みを行う.
+         * @param {family.narrowDown.Criteria} criteria 検索条件
+         */
+        render: function(criteria) {
+            var _this = this;
+            $(this.rootSelector).each(function() {
+                _this._doRender(criteria, $(this));
+            });
+            if ($.isFunction(window.setLineHight)) {
+                setLineHight();
+            }
+        },
+
+        /**
+         * 実際の絞込み処理を行う.
+         * @param {family.narrowDown.Criteria} criteria 検索条件
+         * @param {jQuery} rootNode 最上位ノード
+         */
+        _doRender: function(criteria, rootNode) {
+            var filterInfo = {
+                criteria: criteria,
+                root: rootNode,
+                results: rootNode.find(this.listItemsSelector)
+            };
+            family.narrowDown.filterResults(filterInfo);
+        }
+    });
+
+    /**
+     * 検索結果のフィルタを行うインターフェイス.
+     * @class
+     */
+    family.narrowDown.ResultFilter = function() {};
+    $.extend(family.narrowDown.ResultFilter.prototype, /** @lends family.narrowDown.ResultFilter.prototype */ {
+        /**
+         * 指定したmetaDataが条件を満たすかを取得する.
+         * @param {family.narrowDown.Criteria} criteria 条件情報
+         * @param {Object} metaData 要素のメタ情報
+         * @returns 条件を満たさない場合は false、それ以外は true.
+         */
+        matches: function(criteria, metaData) {}
+    });
+
+    /**
+     * Tag によるフィルタを行う.
+     * @class
+     * @augments family.narrowDown.ResultFilter
+     */
+    family.narrowDown.TagFilter = function() {};
+    $.extend(family.narrowDown.TagFilter.prototype, /** @lends family.narrowDown.TagFilter.prototype */ {
+        /**
+         * 対象の条件名のパターン.
+         * @const
+         */
+        CRITERIA_NAME_PATTERN: /^T\](.*)/,
+
+        /**
+         * 条件を満たすかを取得する.
+         * @param {family.narrowDown.Criteria} criteria 条件情報
+         * @param {Object} metaData 要素のメタ情報
+         * @returns 条件を満たさない場合は false、それ以外は true.
+         */
+        matches: function(criteria, metaData) {
+            var tags = metaData.tags || [];
+            var result = true;
+            var _this = this;
+            $.each(criteria, function(name, items) {
+                var matched = _this.CRITERIA_NAME_PATTERN.exec(name);
+                if (matched != null) {
+                    result = false;
+                    for (var i = 0; i < items.length; i++) {
+                        var tagName = matched[1] + "/" + items[i];
+                        if ($.inArray(tagName, tags) >= 0) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+                return result;
+            });
+            return result;
+        }
+    });
+
+    /**
+     * 定数に対応する値によるフィルタを行う.
+     * @class
+     * @augments family.narrowDown.ResultFilter
+     */
+    family.narrowDown.ConstFilter = function() {};
+    $.extend(family.narrowDown.ConstFilter.prototype, /** @lends family.narrowDown.ConstFilter.prototype */ {
+        /**
+         * 対象の条件名のパターン.
+         * @const
+         */
+        CRITERIA_NAME_PATTERN: /^C\](.*)/,
+
+        /**
+         * 条件を満たすかを取得する.
+         * @param {family.narrowDown.Criteria} criteria 条件情報
+         * @param {Object} metaData 要素のメタ情報
+         * @returns 条件を満たさない場合は false、それ以外は true.
+         */
+        matches: function(criteria, metaData) {
+            var result = true;
+            var _this = this;
+            $.each(criteria, function(name, items) {
+                var matched = _this.CRITERIA_NAME_PATTERN.exec(name);
+                if (matched != null) {
+                    var values = _this._getMetaValue(metaData, matched[1]) || [];
+                    if (!$.isArray(values)) {
+                        values = [values];
+                    }
+
+                    result = false;
+                    for (var i = 0; i < items.length; i++) {
+                        if ($.inArray(items[i], values) >= 0) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+                return result;
+            });
+            return result;
+        },
+
+        /**
+         * メタデータから指定した名前の値を取得する.
+         * @param {Object} metaData 要素のメタ情報
+         * @param {string} name 取得する情報の名前
+         */
+        _getMetaValue: function(metaData, name) {
+            return metaData[name];
+        },
+    });
+
+    /**
+     * 実施期間によるフィルタを行う.
+     * @class
+     * @augments family.narrowDown.ResultFilter
+     */
+    family.narrowDown.TermKindFilter = function() {};
+    family.narrowDown.extendClass(family.narrowDown.TermKindFilter, family.narrowDown.ConstFilter,
+            /** @lends family.narrowDown.ConstFilter.prototype */ {
+        /**
+         * 対象の条件名のパターン.
+         * @const
+         */
+        CRITERIA_NAME_PATTERN: /^CS\](termKind)$/,
+
+        /**
+         * メタデータから指定した名前の値を取得する.
+         * @param {Object} metaData 要素のメタ情報
+         * @param {string} name 取得する情報の名前
+         */
+        _getMetaValue: function(metaData, name) {
+            value = metaData[name];
+            if (value !== 'soonEnd') {
+                return value;
+            }
+            return [value, 'ongoing'];
+        }
+    });
+
+    /**
+     * 結果を絞り込むフィルタ.
+     * @type {family.narrowDown.ResultFilter[]}.
+     */
+    family.narrowDown.resultFilters = [
+         new family.narrowDown.TagFilter(),
+         new family.narrowDown.ConstFilter(),
+         new family.narrowDown.TermKindFilter()
+    ];
+
+    /**
+     * 検索条件にマッチしないノードを削除する.
+     * 条件とマッチするかは、family.narrowDown.resultFilters に設定されているフィルタで判定する。
+     * @param {family.narrowDown.FilterInfo} filterInfo フィルタの情報
+     */
+    family.narrowDown.filterResults = function(filterInfo) {
+        var removeTargets = [];
+        filterInfo.results.each(function() {
+            var result = $(this);
+            var metaData = JSON.parse(result.find('input[name=metaData]').val());
+            var filters = family.narrowDown.resultFilters;
+            for (var i = 0; i < filters.length; i++) {
+                if (!filters[i].matches(filterInfo.criteria, metaData)) {
+                    removeTargets.push(result);
+                    break;
+                }
+            }
+        });
+        if (removeTargets.length === filterInfo.results.length) {
+            filterInfo.root.children().remove();
+            filterInfo.root.append('<div><p class="ly-lead ly-no-result ly-ta-c">条件に該当するものが見つかりませんでした。</p></div>');
+            if (FONTPLUS) FONTPLUS.reload();
+        } else {
+            $.each(removeTargets, function(i, elt) { elt.remove(); });
+        }
+    };
+})();
+
+/**
+ * 今お得・Tポイントプラス コンポーネント共通.
+ * @param {JQuery} $ jQuery
+ */
+(function($) {
+    /**
+     * 今お得・Tポイントプラス モジュールのセレクタ.
+     * @const
+     */
+    var SELECTOR = "div.js-otokuModule, div.js-pointPlusModule";
+
+    /**
+     * 今お得・ポイントプラス用のレンダラ.
+     * @class
+     * @extends family.narrowDown.DefaultRenderer
+     */
+    var Renderer = function() {
+        family.narrowDown.DefaultRenderer.call(this, SELECTOR, 'tbody > tr');
+    };
+    family.narrowDown.extendClass(Renderer, family.narrowDown.DefaultRenderer, {
+        /** @lends Renderer */
+        _doRender: function(criteria, rootNode) {
+            this._super._doRender.apply(this, arguments);
+
+            // 検索結果で、カテゴリ内が空のものを削除
+            var removeTargets = [];
+            rootNode.find('.ly-mod-tbl-goods-result').each(function() {
+                var categoryNode = $(this);
+                if (categoryNode.find('tbody > tr').length === 0) {
+                    removeTargets.push(categoryNode);
+                }
+            });
+            $.each(removeTargets, function() { $(this).remove(); });
+        }
+    });
+
+    /**
+     * 初期化を行う.
+     */
+    function initialize() {
+        if ($(SELECTOR).length > 0) {
+            family.narrowDown.registerResultRenderer(new Renderer());
+        }
+    }
+
+    $(function() {
+        initialize();
+    });
+})(jQuery);
+
+/**
+ * 栄養成分アレルゲン コンポーネント.
+ * @param {JQuery} $ jQuery
+ */
+(function($) {
+    /**
+     * 栄養成分 モジュールのセレクタ.
+     * @const
+     */
+    var SELECTOR = "div.js-nutritionAllergenModule";
+
+    /**
+     * 初期化を行う.
+     */
+    function initialize() {
+        if ($(SELECTOR).length > 0) {
+            family.narrowDown.registerResultRenderer(
+                    new family.narrowDown.DefaultRenderer(SELECTOR, 'tbody > tr'));
+        }
+    }
+
+    $(function() {
+        initialize();
+    });
+})(jQuery);
+
+/**
+ * ファミコレ・商品カテゴリ コンポーネント.
+ * @param {JQuery} $ jQuery
+ */
+(function($) {
+    /**
+     * モジュールのセレクタ.
+     * @const
+     */
+    var SELECTOR = "div.js-famicolleGoodCategoyModule";
+
+    /**
+     * 初期化を行う.
+     */
+    function initialize() {
+        if ($(SELECTOR).length > 0) {
+            family.narrowDown.registerResultRenderer(
+                    new family.narrowDown.DefaultRenderer(SELECTOR, '.ly-wrp-result div.ly-mod-layout-clm'));
+        }
+    }
+
+    $(function() {
+        initialize();
+    });
+})(jQuery);
+
+/**
+ * 汎用リスト コンポーネント.
+ * @param {JQuery} $ jQuery
+ */
+(function($) {
+    /**
+     * モジュールのセレクタ.
+     * @const
+     */
+    var SELECTOR = "div.js-wideUseListModule";
+
+    /**
+     * 初期化を行う.
+     */
+    function initialize() {
+        if ($(SELECTOR).length > 0) {
+            family.narrowDown.registerResultRenderer(
+                    new family.narrowDown.DefaultRenderer(SELECTOR, '.ly-mod-layout-clm'));
+        }
+    }
+
+    $(function() {
+        initialize();
+    });
+})(jQuery);
+
+/**
+ * キャンペーンモジュール コンポーネント.
+ * @param {JQuery} $ jQuery
+ */
+(function($) {
+    /**
+     * モジュールのセレクタ.
+     * @const
+     */
+    var SELECTOR = "div.js-campaignModule";
+
+    /**
+     * 初期化を行う.
+     */
+    function initialize() {
+        if ($(SELECTOR).length > 0) {
+            family.narrowDown.registerResultRenderer(
+                    new family.narrowDown.DefaultRenderer(SELECTOR, 'div.ly-mod-layout-clm'));
+        }
+    }
+
+    $(function() {
+        initialize();
+    });
+})(jQuery);
