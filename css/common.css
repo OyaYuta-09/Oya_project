@@ -17,7 +17,7 @@ img {
 	border: 0;
 }
 #contents {
-	width: 800px;
+	width: 100px;
 	margin: 0 auto 0 auto;
 	overflow: hidden;
 }
@@ -44,14 +44,7 @@ img {
 #graphic {
 	margin-bottom: 0;
 }
-#main h2 {
-	margin-bottom: 10px;
-	padding: 4px 0 0 20px;
-	background-image: url(../images/h2.png);
-	background-repeat: no-repeat;
-	background-position: 0 5px;
-	font-size: 134%;
-}
+
 caption {
 	overflow: hidden;
 }
