@@ -27,27 +27,13 @@
 #footer p {
 	margin-bottom: 0;
 	padding: 14px 0 14px 0;
-<<<<<<< HEAD:css/style.css
 	background-image: url(../images/web1.jpg);
-=======
+
 	background-image: url(../images/LawsonH1.png);
 >>>>>>> 3fd5b503e6b37ea6f96bc4b5349e4ed83c9fd252:lawson.css
 	background-repeat: repeat-x;
 	text-align: center;
 }
-/* 基本レイアウト ここまで↑ */
-
-<<<<<<< HEAD:css/style.css
-/* 「施設のご案内」ページ ここから↓ */
-
-/* 「施設のご案内」ページ ここまで↑ */
-
-/* 「料金プラン」ページ ここから↓ */
-
-/* 「料金プラン」ページ ここまで↑ */
-
-/* 「ご意見・ご要望」ページ ここから↓ */
-
 textarea {
     width: 500px;
     height: 170px;
@@ -64,9 +50,6 @@ input.name {
 	background-repeat: repeat-x;
 	text-align: center;
 }
-/* 「ご意見・ご要望」ページ ここまで↑ */
-=======
-/* 「ローソン」ページ ここから↓ */
 #main h2 {
 	padding: 0 0 10px 40px;
 	background-image: url(../images/LawsonH1.jpg);
@@ -80,6 +63,4 @@ table {
 }
 td {
     vertical-align: top;
-}
-/* 「ローソン」ページ ここまで↑ */
->>>>>>> 3fd5b503e6b37ea6f96bc4b5349e4ed83c9fd252:lawson.css
+} 3fd5b503e6b37ea6f96bc4b5349e4ed83c9fd252:lawson.css
