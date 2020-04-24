@@ -1,1 +1,1 @@
-https://OyaYuta-09.github.io/Oya_project
+https://OyaYuta-09.github.io/Oya_project/index.html
