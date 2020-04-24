@@ -1,0 +1,66 @@
+﻿@charset "utf-8";
+
+/* 基本レイアウト ここから↓ */
+@import url(common.css);
+
+#header {   
+	width: 800px;
+	height: 70px;
+	margin: 20px auto 40px auto;
+	position: relative;
+}
+#header h1 {
+	margin : 0;
+	position: absolute;
+}
+#nav {
+	position: absolute;
+	right: 0;
+}
+#nav ul {
+	list-style-type: none;
+	overflow: hidden;
+}
+#nav ul li {
+	float: left;
+}
+#footer p {
+	margin-bottom: 0;
+	padding: 14px 0 14px 0;
+	background-image: url(../images/web1.jpg);
+
+	background-image: url(../images/LawsonH1.png);
+>>>>>>> 3fd5b503e6b37ea6f96bc4b5349e4ed83c9fd252:lawson.css
+	background-repeat: repeat-x;
+	text-align: center;
+}
+textarea {
+    width: 500px;
+    height: 170px;
+    overflow-y: scroll;
+}
+input.name {
+    width: 500px;
+}
+
+#footer p {
+	margin-bottom: 0;
+	padding: 14px 0 14px 0;
+	background-image: url(../images/web1.jpg);
+	background-repeat: repeat-x;
+	text-align: center;
+}
+#main h2 {
+	padding: 0 0 10px 40px;
+	background-image: url(../images/LawsonH1.jpg);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	font-size: 200%;
+}
+table {
+    margin-left:auto;
+    margin-right:auto;
+}
+td {
+    vertical-align: top;
+} 3fd5b503e6b37ea6f96bc4b5349e4ed83c9fd252:lawson.css
